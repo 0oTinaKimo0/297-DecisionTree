@@ -10,7 +10,7 @@ from sklearn import tree
 from pydotplus import graph_from_dot_data
 from sklearn.tree import export_graphviz
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.neighbors import KNeighborsClassifier
+
 
 # Loading the Iris dataset from scikit-learn. Here, the third column represents the petal length, and the fourth column the petal width of the flower examples. The classes are already converted to integer labels where 0=Iris-Setosa, 1=Iris-Versicolor, 2=Iris-Virginica.
 diabetes = pd.read_csv('diabetes.csv', header=0)
@@ -30,7 +30,6 @@ print('Labels counts in y_test:', np.bincount(y_test))
 # Standardizing the features:
 # X_train = pp.scale(X_train)
 # X_test = pp.scale(X_test)
-
 
 # def plot_decision_regions(X, y, classifier, test_idx=None, resolution=0.02):
 #
@@ -117,16 +116,24 @@ plt.ylabel('impurity index')
 #plt.show()
 
 # Building a decision tree
-depth_check = [4, 8, 12, 16, 20]
-criterion_check = ['gini', 'entropy']
-for i in depth_check:
-    tree_model = DecisionTreeClassifier(criterion='gini', max_depth=i, random_state=1)
-    tree_model.fit(X_train, y_train)
-    y_pred = tree_model.predict(X_test)
-    print(accuracy_score(y_test, y_pred))
+# depth_check = [4, 8, 12, 16, 20]
+# criterion_check = ['gini', 'entropy']
+# for i in depth_check:
+tree_model = DecisionTreeClassifier(criterion='gini', max_depth=8, random_state=1)
+tree_model.fit(X_train, y_train)
+tree_pred = tree_model.predict(X_test)
+print(accuracy_score(y_test, tree_pred))
 
-X_combined = np.vstack((X_train, X_test))
-y_combined = np.hstack((y_train, y_test))
+forest = RandomForestClassifier(criterion='gini',
+                                n_estimators=25,
+                                random_state=1,
+                                n_jobs=2)
+forest.fit(X_train, y_train)
+forest_pred = forest.predict(X_test)
+print(accuracy_score(y_test, forest_pred))
+
+# X_combined = np.vstack((X_train, X_test))
+# y_combined = np.hstack((y_train, y_test))
 # plot_decision_regions(X_combined, y_combined,
 #                       classifier=tree_model,
 #                       test_idx=range(105, 150))
