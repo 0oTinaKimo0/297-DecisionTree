@@ -116,21 +116,20 @@ plt.ylabel('impurity index')
 #plt.show()
 
 # Building a decision tree
-# depth_check = [4, 8, 12, 16, 20]
+# depth_check = [4, 8, 12, 16, 20] # 8 was optimal!
 # criterion_check = ['gini', 'entropy']
 # for i in depth_check:
 tree_model = DecisionTreeClassifier(criterion='gini', max_depth=8, random_state=1)
 tree_model.fit(X_train, y_train)
 tree_pred = tree_model.predict(X_test)
-print(accuracy_score(y_test, tree_pred))
+print("Decision Tree Accuracy: %3f" % accuracy_score(y_test, tree_pred))
 
-forest = RandomForestClassifier(criterion='gini',
-                                n_estimators=25,
-                                random_state=1,
-                                n_jobs=2)
+# estimators_check = [10, 25, 40, 55, 70, 85, 100, 200, 300] # 300 was optimal!
+# for i in estimators_check:
+forest = RandomForestClassifier(criterion='gini', n_estimators=300, random_state=1, n_jobs=2)
 forest.fit(X_train, y_train)
 forest_pred = forest.predict(X_test)
-print(accuracy_score(y_test, forest_pred))
+print("Random Forest Accuracy: %3f" % accuracy_score(y_test, forest_pred))
 
 # X_combined = np.vstack((X_train, X_test))
 # y_combined = np.hstack((y_train, y_test))
