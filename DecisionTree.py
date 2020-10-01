@@ -124,27 +124,14 @@ tree_model.fit(X_train, y_train)
 tree_pred = tree_model.predict(X_test)
 print("Decision Tree Accuracy: %3f" % accuracy_score(y_test, tree_pred))
 
-# estimators_check = [10, 25, 40, 55, 70, 85, 100, 200, 300] # 300 was optimal!
-# for i in estimators_check:
-forest = RandomForestClassifier(criterion='gini', n_estimators=300, random_state=1, n_jobs=2)
+#estimators_check = [10, 25, 40, 55, 70, 85, 100, 200, 300] # 200 was optimal!
+#for i in estimators_check:
+forest = RandomForestClassifier(criterion='gini', bootstrap=False, n_estimators=200, random_state=1, n_jobs=2)
 forest.fit(X_train, y_train)
 forest_pred = forest.predict(X_test)
 print("Random Forest Accuracy: %3f" % accuracy_score(y_test, forest_pred))
 
-# X_combined = np.vstack((X_train, X_test))
-# y_combined = np.hstack((y_train, y_test))
-# plot_decision_regions(X_combined, y_combined,
-#                       classifier=tree_model,
-#                       test_idx=range(105, 150))
-
-# plt.xlabel('petal length [cm]')
-# plt.ylabel('petal width [cm]')
-# plt.legend(loc='upper left')
-# plt.tight_layout()
-# #plt.savefig('images/03_20.png', dpi=300)
-# plt.show()
-
 tree.plot_tree(tree_model)
 # plt.savefig('tree.png')
-# plt.show()
+plt.show()
 
