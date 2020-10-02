@@ -130,6 +130,7 @@ forest = RandomForestClassifier(criterion='gini', bootstrap=False, n_estimators=
 forest.fit(X_train, y_train)
 forest_pred = forest.predict(X_test)
 print("Random Forest Accuracy: %3f" % accuracy_score(y_test, forest_pred))
+print("\n" , classification_report(y_test, forest_pred))
 
 tree.plot_tree(tree_model)
 # plt.savefig('tree.png')
