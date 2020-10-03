@@ -2,7 +2,7 @@
 ### Tina Jin and Virginia Weston
 
 ### Exploratory Data Analysis 
-For our Exploratory Data Analysis, we initially ran a scatter plot matrix to explore relationships from all of the variables excluding the outcome. All of the variables were quantitative, making it easier to decipher relationships between them.
+For our Exploratory Data Analysis, we initially ran a scatter plot matrix to explore relationships by setting the outcome to the y variable and setting the rest to x. All of the x variables were quantitative, making it easier to decipher relationships between them.
 ![](/images/Figure_2.png)
 Moreover, by using a heatmap, we were able to conceptualize any linear relationships between the data. The strongest linear relationship among the data was between age and pregnancy, with a correlation coefficient of 0.54. Although not considered a strong linear relationship, the two variables can be considered correlated to one another. 
 ![](/images/Figure_1.png)
@@ -13,6 +13,6 @@ The highest accuracy rate produced from this model was found by using a depth of
 ![](/images/DTprecision.png)
 ![](/images/treegraph.png)
 ### Random Forest
-Implementing the random forest algorithm greatly improved our model because it was able to average our original decision tree with a depth of eight. The accuracy increased from 0.74 to 0.76 by implementing a Random Forest algorithm on our decision tree model. Using the RandomForestClassifier API call, we altered our hyperparameters to maximize accuracy. This consisted of setting the number of estimators to 200 and changing the boostrap to False in order to build each tree. Essentially, this model greatly improved upon our previous Decision Tree model because it used a “deep” Decision Tree model to create a more accurate, shallow tree in order to classify the data. 
+Implementing the random forest algorithm greatly improved our model because it was able to average our original decision tree with a depth of eight. The accuracy increased from 0.74 to 0.76 by implementing a Random Forest algorithm on our decision tree model. Using the RandomForestClassifier API call, we altered our hyperparameters to maximize accuracy. This consisted of setting the number of estimators to 200 and changing the boostrap to False in order to build each tree. Our Random Forest model uses 200 shallow decision trees with randomized features to produce a more accurate model with significantly less bias. 
 
 ![](/images/RFprecision.png)
