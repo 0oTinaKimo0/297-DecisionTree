@@ -17,5 +17,5 @@ y = diabetes['OUT'].T
 cm = np.corrcoef(diabetes[diabetes.columns].values.T)
 hm = heatmap(cm, row_names=diabetes.columns, column_names=diabetes.columns)
 
-scatterplotmatrix(diabetes[features].values, figsize=(10, 8), names=features, alpha=0.4)
+scatterplotmatrix(diabetes[diabetes.columns].values, figsize=(10, 8), names=diabetes.columns, alpha=0.4)
 plt.show()
