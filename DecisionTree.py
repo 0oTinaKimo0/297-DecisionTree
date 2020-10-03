@@ -3,89 +3,35 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import sklearn.preprocessing as pp
 from sklearn.metrics import accuracy_score
-from matplotlib.colors import ListedColormap
+from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import tree
-from pydotplus import graph_from_dot_data
-from sklearn.tree import export_graphviz
 from sklearn.ensemble import RandomForestClassifier
 
 
-# Loading the Iris dataset from scikit-learn. Here, the third column represents the petal length, and the fourth column the petal width of the flower examples. The classes are already converted to integer labels where 0=Iris-Setosa, 1=Iris-Versicolor, 2=Iris-Virginica.
+# Loading the diabetes dataset from the csv file using pandas
 diabetes = pd.read_csv('diabetes.csv', header=0)
 diabetes.columns = ['PREG', 'GLU', 'BP', 'SKIN', 'INSU', 'BMI', 'DPF', 'AGE', 'OUT']
 features = ['PREG', 'GLU', 'BP', 'SKIN', 'INSU', 'BMI', 'DPF', 'AGE']
 X = diabetes[features]
 y = diabetes['OUT'].T
-
-# print('Class labels:', np.unique(y))
-
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1, stratify=y)
 
 print('Labels counts in y:', np.bincount(y))
 print('Labels counts in y_train:', np.bincount(y_train))
 print('Labels counts in y_test:', np.bincount(y_test))
 
-# Standardizing the features:
+# Feature standardization (which we choose to omit)
 # X_train = pp.scale(X_train)
 # X_test = pp.scale(X_test)
 
-# def plot_decision_regions(X, y, classifier, test_idx=None, resolution=0.02):
-#
-#     # setup marker generator and color map
-#     markers = ('s', 'x', 'o', '^', 'v')
-#     colors = ('red', 'blue', 'lightgreen', 'gray', 'cyan')
-#     cmap = ListedColormap(colors[:len(np.unique(y))])
-#
-#     # plot the decision surface
-#     x1_min, x1_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-#     x2_min, x2_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-#     xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, resolution),
-#                            np.arange(x2_min, x2_max, resolution))
-#     Z = classifier.predict(np.array([xx1.ravel(), xx2.ravel()]).T)
-#     Z = Z.reshape(xx1.shape)
-#     plt.contourf(xx1, xx2, Z, alpha=0.3, cmap=cmap)
-#     plt.xlim(xx1.min(), xx1.max())
-#     plt.ylim(xx2.min(), xx2.max())
-#
-#     for idx, cl in enumerate(np.unique(y)):
-#         plt.scatter(x=X[y == cl, 0],
-#                     y=X[y == cl, 1],
-#                     alpha=0.8,
-#                     c=colors[idx],
-#                     marker=markers[idx],
-#                     label=cl,
-#                     edgecolor='black')
-#
-#     # highlight test examples
-#     if test_idx:
-#         # plot all examples
-#         X_test, y_test = X[test_idx, :], y[test_idx]
-#
-#         plt.scatter(X_test[:, 0],
-#                     X_test[:, 1],
-#                     c='none',
-#                     edgecolor='black',
-#                     alpha=1.0,
-#                     linewidth=1,
-#                     marker='o',
-#                     s=100,
-#                     label='test set')
-
-
-# # Decision tree learning
-
-# ## Maximizing information gain - getting the most bang for the buck
-
-
+# Impurity metrics for the decision tree - maximizing information gain
 def gini(p):
     return p * (1 - p) + (1 - p) * (1 - (1 - p))
 
-
 def entropy(p):
     return - p * np.log2(p) - (1 - p) * np.log2((1 - p))
-
 
 def error(p):
     return 1 - np.max([p, 1 - p])
@@ -98,8 +44,8 @@ err = [error(i) for i in x]
 
 fig = plt.figure()
 ax = plt.subplot(111)
-for i, lab, ls, c, in zip([ent, sc_ent, gini(x), err], 
-                          ['Entropy', 'Entropy (scaled)', 
+for i, lab, ls, c, in zip([ent, sc_ent, gini(x), err],
+                          ['Entropy', 'Entropy (scaled)',
                            'Gini impurity', 'Misclassification error'],
                           ['-', '-', '--', '-.'],
                           ['black', 'lightgray', 'red', 'green', 'cyan']):
@@ -113,7 +59,7 @@ ax.axhline(y=1.0, linewidth=1, color='k', linestyle='--')
 plt.ylim([0, 1.1])
 plt.xlabel('p(i=1)')
 plt.ylabel('impurity index')
-#plt.show()
+# plt.show()
 
 # Building a decision tree
 # depth_check = [4, 8, 12, 16, 20] # 8 was optimal!
@@ -123,16 +69,17 @@ tree_model = DecisionTreeClassifier(criterion='gini', max_depth=8, random_state=
 tree_model.fit(X_train, y_train)
 tree_pred = tree_model.predict(X_test)
 print("Decision Tree Accuracy: %3f" % accuracy_score(y_test, tree_pred))
+print("\n", classification_report(y_test, tree_pred))
 
-#estimators_check = [10, 25, 40, 55, 70, 85, 100, 200, 300] # 200 was optimal!
-#for i in estimators_check:
+tree.plot_tree(tree_model)
+# plt.savefig('treegraph.png')
+# plt.show()
+
+# Building a random forest
+# estimators_check = [10, 25, 40, 55, 70, 85, 100, 200, 300] # 200 was optimal!
+# for i in estimators_check:
 forest = RandomForestClassifier(criterion='gini', bootstrap=False, n_estimators=200, random_state=1, n_jobs=2)
 forest.fit(X_train, y_train)
 forest_pred = forest.predict(X_test)
 print("Random Forest Accuracy: %3f" % accuracy_score(y_test, forest_pred))
-print("\n" , classification_report(y_test, forest_pred))
-
-tree.plot_tree(tree_model)
-# plt.savefig('tree.png')
-plt.show()
-
+print("\n", classification_report(y_test, forest_pred))
